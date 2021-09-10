@@ -1,0 +1,33 @@
+@import-normalize;
+@import "helper";
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+*::after {
+  box-sizing: border-box;
+}
+
+*::before {
+  box-sizing: border-box;
+}
+
+ul, ol {
+  list-style-type: none;
+}
+
+body {
+  font-family: $font-hei;
+  font-size: 16px;
+  line-height: 1.2;
+}
+a{
+  text-decoration: none;
+  color: inherit;
+}
