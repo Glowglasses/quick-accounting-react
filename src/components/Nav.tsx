@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {Link} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import Icon from './Icon';
 
 const NavWrapper = styled.nav`
@@ -18,6 +18,12 @@ const NavWrapper = styled.nav`
         justify-content: center;
         align-items: center;
         user-select: none;
+        &.selected{
+          color: red;
+          > .icon{
+            fill: red;
+          }
+        }
       }
     }
     .icon {
@@ -32,22 +38,22 @@ function Nav() {
     <NavWrapper>
       <ul>
         <li>
-          <Link to="/statistics">
+          <NavLink to="/statistics" activeClassName="selected">
             <Icon name="statistics"/>
             明细
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/money">
+          <NavLink to="/money" activeClassName="selected">
             <Icon name="money"/>
             记账
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/chart">
+          <NavLink to="/chart" activeClassName="selected">
             <Icon name="chart"/>
             图表
-          </Link>
+          </NavLink>
         </li>
       </ul>
     </NavWrapper>
