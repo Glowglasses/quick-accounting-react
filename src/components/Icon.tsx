@@ -1,6 +1,16 @@
+import styled from 'styled-components';
+
 type Props = {
   name: string;
 }
+
+const Svg = styled.svg`
+  height: 1.5em;
+  width: 1.5em;
+  fill: currentColor;
+  vertical-align: bottom;
+  overflow: hidden;
+`
 let importAll = (requireContext: __WebpackModuleApi.RequireContext) => requireContext.keys().forEach(requireContext);
 try {
   importAll(require.context('icons/', true, /\.svg$/));
@@ -10,9 +20,9 @@ try {
 
 function Icon(props: Props) {
   return (
-    <svg className="icon">
+    <Svg className="icon">
       <use xlinkHref={'#' + props.name}/>
-    </svg>
+    </Svg>
   );
 }
 
