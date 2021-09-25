@@ -1,3 +1,13 @@
+function formatDecimal(value: number) {
+  const pointIndex = String(value).indexOf('.');
+  if (pointIndex >= 0) {
+    if (String(value).slice(pointIndex).length > 2) {
+      return value.toFixed(2);
+    }
+  }
+  return value;
+}
+
 const updateAccount = (dom: (HTMLButtonElement), accountValue: string) => {
   let outputValue = accountValue;
   let inputValue = dom.textContent || '';
@@ -53,23 +63,15 @@ const updateAccount = (dom: (HTMLButtonElement), accountValue: string) => {
               outputValue = first - second + inputValue;
               break;
             case '×':
-              const value = first * second;
-              if (String(value).length - String(value).indexOf('.') + 1 > 2) {
-                outputValue = value.toFixed(2);
-              } else {
-                outputValue = value + inputValue;
-              }
+              const value = formatDecimal(first * second);
+              outputValue = value + inputValue
               break;
             case '÷':
               if (second === 0) {
                 outputValue = 0 + inputValue;
               } else {
-                let value = first / second;
-                if (String(value).length - String(value).indexOf('.') + 1 > 2) {
-                  outputValue = value.toFixed(2);
-                } else {
-                  outputValue = value + inputValue;
-                }
+                let value = formatDecimal(first / second);
+                outputValue = value + inputValue
               }
               break;
           }
