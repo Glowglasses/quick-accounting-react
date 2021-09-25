@@ -26,8 +26,6 @@ const NumberPadWrapper = styled.div`
   }
 
   > .buttons {
-  @extend % clearFix;
-
     > button {
       height: 70px;
       width: 20%;
