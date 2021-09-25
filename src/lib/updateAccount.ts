@@ -16,7 +16,11 @@ const updateAccount = (dom: (HTMLButtonElement), accountValue: string) => {
       outputValue = '0';
       break;
     case '清除':
-      if (accountValue !== '0') outputValue = accountValue.slice(0, -1);
+      if (accountValue.length > 1){
+        outputValue = accountValue.slice(0, -1);
+      }else {
+        outputValue = '0'
+      }
       break;
     default:
       if (accountValue.length >= 11) return accountValue;
