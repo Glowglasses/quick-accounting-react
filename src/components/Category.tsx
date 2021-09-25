@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
+import Icon from './Icon';
 
 const Wrapper = styled.div`
+  position: relative;
   height: 40px;
   width: 100%;
   display: flex;
@@ -19,6 +21,11 @@ const Wrapper = styled.div`
    } 
   }
 `;
+const IconWrapper = styled.div`
+  position: absolute;
+  right: 8%;
+`
+
 type Props = {
   value?: '-' | '+'
   home?: boolean
@@ -38,6 +45,7 @@ const Category: React.FC<Props> = (props) => {
           {categoryMap[c]}
         </div>
       )}
+      {props.home? <IconWrapper><Icon name='home'/></IconWrapper>: null}
     </Wrapper>
   </>);
 };
