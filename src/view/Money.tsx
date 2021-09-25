@@ -1,18 +1,29 @@
-import React, {useEffect} from 'react';
-import Layout from '../components/Layout';
-import {Category} from '../components/Category';
+import React, {useEffect, useRef} from 'react';
+import {Category} from 'components/Category';
 import {Tags} from './Money/Tags';
+import {NumberPad} from './Money/NumberPad';
+import styled from 'styled-components';
+
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
 
 function Money() {
-
+  let refDiv = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    console.log(document.documentElement.clientHeight);
+    if (refDiv.current){
+      refDiv.current.style.height = document.documentElement.clientHeight + 'px'
+    }
   }, []);
   return (
-    <Layout>
+    <Wrapper ref={refDiv}>
       <Category/>
       <Tags/>
-    </Layout>
+      <NumberPad/>
+    </Wrapper>
   );
 }
 

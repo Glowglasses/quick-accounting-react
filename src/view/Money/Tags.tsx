@@ -1,10 +1,11 @@
-import React, {LegacyRef, useRef, useState} from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
-import Icon from '../../components/Icon';
+import Icon from 'components/Icon';
 
 const Wrapper = styled.div`
   width: 90%;
   margin: 30px auto;
+  flex-grow: 1;
   > ol{
     display: flex;
     justify-content: flex-start;
@@ -33,7 +34,7 @@ const Wrapper = styled.div`
   }
 `
 const Tags:React.FC = () => {
-  const [tags, setTags] = useState<{value: string,id: number}[]>([{value:'衣',id:1},{value:'食',id: 2},{value:'住',id: 3},{value:'行',id: 4}])
+  const [tags] = useState<{value: string,id: number}[]>([{value:'衣',id:1},{value:'食',id: 2},{value:'住',id: 3},{value:'行',id: 4}])
   const [selectedList, setSelectedList] = useState<number[]>([])
   const triggerTag = (id: number) => {
     const index = selectedList.findIndex(item => id === item)
