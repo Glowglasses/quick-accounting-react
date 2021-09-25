@@ -1,0 +1,88 @@
+const updateAccount = (dom: (HTMLButtonElement), accountValue: string) => {
+  let outputValue = accountValue;
+  let inputValue = dom.textContent || '';
+  switch (inputValue) {
+    case '清空':
+      outputValue = '0';
+      break;
+    case '清除':
+      if (accountValue !== '0') outputValue = accountValue.slice(0, -1);
+      break;
+    default:
+      if (accountValue.length >= 11) return accountValue;
+      break;
+  }
+  if (accountValue === '0') {
+    if ('0123456789'.indexOf(inputValue) >= 0) {
+      outputValue = inputValue;
+    } else if ('+-×÷'.indexOf(inputValue) >= 0) {
+      outputValue += inputValue;
+    }
+  } else {
+    if ('0123456789'.indexOf(inputValue) >= 0) {
+      outputValue += inputValue;
+    } else if ('+-×÷'.indexOf(inputValue) >= 0) {
+      if (accountValue.indexOf('+') >= 0 || accountValue.slice(1).indexOf('-') >= 0 || accountValue.indexOf('×') >= 0 || accountValue.indexOf('÷') >= 0) {
+        if ('+-×÷'.indexOf(accountValue.substring(accountValue.length - 1)) === -1) {
+          let first = 0;
+          let second = 0;
+          let frontPartArray;
+          let backPartArray;
+          let computerType;
+          let firstIsNegative = false;
+          if (accountValue[0] === '-') {
+            frontPartArray = accountValue.slice(1).match(/(\S*)[+\-×÷]/);
+            backPartArray = accountValue.slice(1).match(/[+\-×÷](\S*)/);
+            firstIsNegative = true;
+          } else {
+            frontPartArray = accountValue.match(/(\S*)[+\-×÷]/);
+            backPartArray = accountValue.match(/[+\-×÷](\S*)/);
+          }
+          if (frontPartArray) {
+            firstIsNegative ? first = parseFloat('-' + frontPartArray[1]) : first = parseFloat(frontPartArray[1]);
+          }
+          if (backPartArray) {
+            second = parseFloat(backPartArray[1]);
+            computerType = backPartArray[0][0];
+          }
+          switch (computerType || '') {
+            case '+':
+              outputValue = first + second + inputValue;
+              break;
+            case '-':
+              outputValue = first - second + inputValue;
+              break;
+            case '×':
+              const value = first * second;
+              if (String(value).length - String(value).indexOf('.') + 1 > 2) {
+                outputValue = value.toFixed(2);
+              } else {
+                outputValue = value + inputValue;
+              }
+              break;
+            case '÷':
+              if (second === 0) {
+                outputValue = 0 + inputValue;
+              } else {
+                let value = first / second;
+                if (String(value).length - String(value).indexOf('.') + 1 > 2) {
+                  outputValue = value.toFixed(2);
+                } else {
+                  outputValue = value + inputValue;
+                }
+              }
+              break;
+          }
+        }
+      } else {
+        outputValue += inputValue;
+      }
+    }
+  }
+  if (inputValue === '.') {
+    if (accountValue.indexOf('.') === -1) outputValue = accountValue + '.';
+  }
+  return outputValue;
+};
+
+export {updateAccount};
