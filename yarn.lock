@@ -2573,10 +2573,10 @@ antd-mobile-v5-count@^1.0.1:
   resolved "https://registry.nlark.com/antd-mobile-v5-count/download/antd-mobile-v5-count-1.0.1.tgz#85f20c46d1635c24e856bcf5ad55e8c98e44a523"
   integrity sha1-hfIMRtFjXCToVrz1rVXoyY5EpSM=
 
-antd-mobile@^5.0.0-beta.11:
-  version "5.0.0-beta.11"
-  resolved "https://registry.npmmirror.com/antd-mobile/download/antd-mobile-5.0.0-beta.11.tgz?cache=0&sync_timestamp=1632556524867&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fantd-mobile%2Fdownload%2Fantd-mobile-5.0.0-beta.11.tgz#f72cfbfbd33e41ed6f770364bcfb15ad905ce862"
-  integrity sha1-9yz7+9M+Qe1vdwNkvPsVrZBc6GI=
+antd-mobile@^5.0.0-beta.12:
+  version "5.0.0-beta.12"
+  resolved "https://registry.npmmirror.com/antd-mobile/download/antd-mobile-5.0.0-beta.12.tgz?cache=0&sync_timestamp=1632623766259&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fantd-mobile%2Fdownload%2Fantd-mobile-5.0.0-beta.12.tgz#947d53a600127cad9515b50689198b8e99f570a6"
+  integrity sha1-lH1TpgASfK2VFbUGiRmLjpn1cKY=
   dependencies:
     "@react-spring/web" "^9.2.4"
     ahooks "^2.10.9"
@@ -4245,8 +4245,8 @@ data-urls@^2.0.0:
 
 dayjs@^1.10.7, dayjs@^1.9.1:
   version "1.10.7"
-  resolved "https://registry.nlark.com/dayjs/download/dayjs-1.10.7.tgz#2cf5f91add28116748440866a0a1d26f3a6ce468"
-  integrity sha1-LPX5Gt0oEWdIRAhmoKHSbzps5Gg=
+  resolved "https://registry.npmjs.org/dayjs/-/dayjs-1.10.7.tgz#2cf5f91add28116748440866a0a1d26f3a6ce468"
+  integrity sha512-P6twpd70BcPK34K26uJ1KT3wlhpuOAPoMwJzpsIWUxHZ7wpmbdZL/hQqBDfz7hGurYSa5PhzdhDHtt319hL3ig==
 
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0, debug@^2.6.9:
   version "2.6.9"
