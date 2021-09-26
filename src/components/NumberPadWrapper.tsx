@@ -128,5 +128,10 @@ const NumberPadWrapper = styled.div`
       }
     }
   }
+  @keyframes clickAnimation{
+    0% {background-color: #FFF;}
+    50% {background-color: #C0C0C0;}
+    100%{background-color: #FFF;}
+  }
 `
 export {NumberPadWrapper}

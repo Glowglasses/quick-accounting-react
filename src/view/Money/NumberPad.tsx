@@ -13,6 +13,7 @@ const NumberPad: React.FC = () => {
   const minDate = dayjs().startOf('year').toDate();
   const refDate = useRef<HTMLButtonElement>(null);
   const clickNumberPad = (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
+    (e.target as HTMLButtonElement).setAttribute('style', 'animation: clickAnimation 0.1s;');
     const newValue = updateAccount({dom: (e.target as HTMLButtonElement), accountValue});
     setAccountValue(newValue);
     if (RegExp(/[+\-×÷]/).test(newValue.slice(1, -1))) {
@@ -20,6 +21,9 @@ const NumberPad: React.FC = () => {
     } else {
       setIsComputer(false);
     }
+    setTimeout(() => {
+      (e.target as HTMLButtonElement).removeAttribute('style');
+    },100)
   };
 
   const computerAccount = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -41,7 +45,7 @@ const NumberPad: React.FC = () => {
 
   const selectedDate = (value: Date) => {
     // 日历每次点击都为当天
-    setToday(new Date())
+    setToday(new Date());
     if (refDate && refDate.current) {
       if (dayjs().isSame(value, 'day')) {
         refDate.current.textContent = '今天';
