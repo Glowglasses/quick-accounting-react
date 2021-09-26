@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Icon from './Icon';
 
@@ -10,7 +11,7 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: flex-end;
   > div {
-    font-size: 18px;
+    font-size: 1.2em;
     text-align: center;
     padding: 0 5px;
     line-height: 1.5em;
@@ -35,6 +36,7 @@ const Category: React.FC<Props> = (props) => {
   const categoryMap = {'-': '支出', '+': '收入'};
   const [categoryList] = useState<('+' | '-')[]>(['-', '+']);
   const [category, setCategory] = useState(props.value)
+  const history = useHistory()
   function click(c: ('+' | '-')){
     setCategory(c)
   }
@@ -45,7 +47,7 @@ const Category: React.FC<Props> = (props) => {
           {categoryMap[c]}
         </div>
       )}
-      {props.home? <IconWrapper><Icon name='home'/></IconWrapper>: null}
+      {props.home? <IconWrapper onClick={() => {history.push('/statistics')}}><Icon name='home'/></IconWrapper>: null}
     </Wrapper>
   </>);
 };
