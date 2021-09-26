@@ -370,12 +370,13 @@ module.exports = function (webpackEnv) {
           oneOf: [
             {
               test: /\.svg$/,
-              use: [
-                {loader: 'svg-sprite-loader', options: {}},
-                {
-                  loader: 'svgo-loader', options: {}
-                },
-              ]
+              loader:'svg-sprite-loader',
+              include: path.resolve(__dirname,'../src/icons')
+            },
+            {
+              test: /\.svg$/,
+              loader: 'svgo-loader',
+              include: path.resolve(__dirname,'..src/icons')
             },
             // TODO: Merge this config once `image/avif` is in the mime-db
             // https://github.com/jshttp/mime-db
