@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-
 const NumberPadWrapper = styled.div`
   font-weight: bold;
   font-size: 1.1em;
@@ -109,9 +108,6 @@ const NumberPadWrapper = styled.div`
       &.ok {
         float: right;
         border-left: 1px solid #D3D3D3;
-      }
-
-      &:nth-child(15) {
         height: 140px;
       }
 
@@ -124,6 +120,7 @@ const NumberPadWrapper = styled.div`
 
       &:nth-child(18) {
         border-left: 1px solid #D3D3D3;
+        font-size: 13px;
       }
 
       &:nth-child(19) {
@@ -131,5 +128,5 @@ const NumberPadWrapper = styled.div`
       }
     }
   }
-`;
-export {NumberPadWrapper};
+`
+export {NumberPadWrapper}
