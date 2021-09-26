@@ -8,6 +8,7 @@ const NumberPad: React.FC = () => {
   const [accountValue, setAccountValue] = useState('0');
   const [dateVisible, setDateVisible] = useState(false);
   const [isComputer, setIsComputer] = useState(false);
+  const [today, setToday] = useState(new Date());
   const maxDate = dayjs().endOf('year').toDate();
   const minDate = dayjs().startOf('year').toDate();
   const refDate = useRef<HTMLButtonElement>(null);
@@ -39,6 +40,8 @@ const NumberPad: React.FC = () => {
   };
 
   const selectedDate = (value: Date) => {
+    // 日历每次点击都为当天
+    setToday(new Date())
     if (refDate && refDate.current) {
       if (dayjs().isSame(value, 'day')) {
         refDate.current.textContent = '今天';
@@ -87,7 +90,7 @@ const NumberPad: React.FC = () => {
         onClose={() => {
           setDateVisible(false);
         }}
-        defaultValue={new Date()}
+        value={today}
         max={maxDate}
         min={minDate}
         onConfirm={selectedDate}
