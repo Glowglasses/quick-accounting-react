@@ -6,6 +6,7 @@ const Wrapper = styled.div`
   width: 90%;
   margin: 30px auto;
   flex-grow: 1;
+  height: 30%;
   > ol{
     display: flex;
     justify-content: flex-start;
