@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import styled from 'styled-components';
 import Icon from 'components/Icon';
 import {HandleTag} from './HandleTag';
@@ -42,14 +42,14 @@ const Wrapper = styled.div`
     }
   }
 `;
-const Tags: React.FC<{category: ('+' | '-')}> = (props) => {
+const Tags: React.FC<{ category: ('+' | '-') }> = (props) => {
   const {tags, setTags} = useTags();
   const [selectedList, setSelectedList] = useState<number[]>([]);
   const [handleTagVisible, setHandleTagVisible] = useState(false);
   const handleType = useRef('add');
   let timer = -1;
   let isEdit = false;
-  const editTagValue = useRef<Tag>({name: '', id: -1,type: '-'});
+  const editTagValue = useRef<Tag>({name: '', id: -1, type: '-'});
   const triggerTag = (id: number) => {
     const index = selectedList.findIndex(item => id === item);
     if (index > -1) {
@@ -60,6 +60,10 @@ const Tags: React.FC<{category: ('+' | '-')}> = (props) => {
       setSelectedList([...selectedList, id]);
     }
   };
+
+  useEffect(() => {
+    setSelectedList([]);
+  }, [props.category]);
 
   const editTag = (value: Tag) => {
     clearTimeout(timer);
@@ -80,15 +84,21 @@ const Tags: React.FC<{category: ('+' | '-')}> = (props) => {
     <Wrapper>
       {!handleTagVisible ? <>
         <ol>
-          {tags.map((item) => item.type === props.category?<li key={item.id} onClick={() => triggerTag(item.id)}
-                                                               onTouchStart={() => {editTag({id: item.id, name: item.name,type: props.category});}}
-                                                               onTouchEnd={endTouch}
-                                                               className={selectedList.find(id => id === item.id) !== undefined ? 'selected' : ''}>
-            {item.name}</li>: null)}
+          {tags.map((item) => item.type === props.category ? <li key={item.id} onClick={() => triggerTag(item.id)}
+                                                                 onTouchStart={() => {
+                                                                   editTag({
+                                                                     id: item.id,
+                                                                     name: item.name,
+                                                                     type: props.category
+                                                                   });
+                                                                 }}
+                                                                 onTouchEnd={endTouch}
+                                                                 className={selectedList.find(id => id === item.id) !== undefined ? 'selected' : ''}>
+            {item.name}</li> : null)}
           <li className="add" onClick={() => {
             setHandleTagVisible(true);
             handleType.current = 'add';
-            editTagValue.current = {name: '', id: -1,type: '-'}
+            editTagValue.current = {name: '', id: -1, type: '-'};
           }}><Icon name="addTags"/></li>
         </ol>
       </> : <HandleTag type={handleType.current} categoryType={props.category} onChange={(value, updateTags) => {
