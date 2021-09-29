@@ -5,11 +5,12 @@ import Icon from './Icon';
 
 const Wrapper = styled.div`
   position: relative;
-  height: 40px;
   width: 100%;
   display: flex;
+  padding-top: 10px;
   justify-content: center;
   align-items: flex-end;
+  margin-bottom: 20px;
   > div {
     font-size: 1.2em;
     text-align: center;
