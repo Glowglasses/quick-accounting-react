@@ -1,5 +1,5 @@
-import React, {useEffect, useRef} from 'react';
-import {Category} from 'components/Category';
+import React, {useEffect, useRef, useState} from 'react';
+import {Category, CategoryType} from 'components/Category';
 import {Tags} from './Money/Tags';
 import {NumberPad} from './Money/NumberPad';
 import styled from 'styled-components';
@@ -12,6 +12,7 @@ const Wrapper = styled.div`
 
 function Money() {
   let refDiv = useRef<HTMLDivElement>(null);
+  const [category,setCategory] = useState<CategoryType>('-')
   useEffect(() => {
     window.addEventListener('contextmenu', (e) => {
       e.preventDefault();
@@ -22,8 +23,8 @@ function Money() {
   }, []);
   return (
     <Wrapper ref={refDiv}>
-      <Category/>
-      <Tags/>
+      <Category onChange={(value) => setCategory(value)}/>
+      <Tags category={category}/>
       <NumberPad/>
     </Wrapper>
   );

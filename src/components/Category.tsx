@@ -28,10 +28,12 @@ const IconWrapper = styled.div`
   right: 8%;
 `
 
+export type CategoryType = ('+' | '-')
 type Props = {
-  value?: '-' | '+'
+  value?: CategoryType
   home?: boolean
-  background?: string
+  background?: string,
+  onChange: (categoryType: CategoryType) => void
 }
 const Category: React.FC<Props> = (props) => {
   const categoryMap = {'-': '支出', '+': '收入'};
@@ -40,6 +42,7 @@ const Category: React.FC<Props> = (props) => {
   const history = useHistory()
   function click(c: ('+' | '-')){
     setCategory(c)
+    if (category) props.onChange(c)
   }
   return (<>
     <Wrapper style={{background: props.background}}>

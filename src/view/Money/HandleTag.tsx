@@ -2,6 +2,7 @@ import React, {useEffect, useRef} from 'react';
 import styled from 'styled-components';
 import {Toast} from 'antd-mobile';
 import {Tag, Tags, useTags} from 'hooks/useTags';
+import {CategoryType} from 'components/Category';
 
 const Wrapper = styled.div`
   width: 80%;
@@ -22,7 +23,8 @@ const Wrapper = styled.div`
 type Props = {
   type: string
   onChange: (value: boolean, updateTags: Tags) => void
-  editValue: Tag
+  editValue: Tag,
+  categoryType: CategoryType
 }
 const HandleTag: React.FC<Props> = (props) => {
   const {addTag, tags, removeTag, updateTag} = useTags();
@@ -40,7 +42,7 @@ const HandleTag: React.FC<Props> = (props) => {
   }, [props, tags]);
 
   const add = () => {
-    addTag((refInput.current as HTMLInputElement).value);
+    addTag((refInput.current as HTMLInputElement).value, props.categoryType);
     Toast.show('添加成功');
   };
 
@@ -52,7 +54,7 @@ const HandleTag: React.FC<Props> = (props) => {
   const update = () => {
     if (refInput.current) {
       if (refInput.current.value) {
-        updateTag({id: props.editValue.id, name: refInput.current.value});
+        updateTag({id: props.editValue.id, name: refInput.current.value, type: props.categoryType});
         Toast.show('更新成功');
       } else {
         Toast.show('请输入至少一个字符！！！');
