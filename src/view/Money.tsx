@@ -1,8 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Category, CategoryType} from 'components/Category';
+import {Category} from 'components/Category';
 import {Tags} from './Money/Tags';
 import {NumberPad} from './Money/NumberPad';
 import styled from 'styled-components';
+import {RecordItem, useRecords} from '../hooks/useRecords';
+import dayjs from 'dayjs';
+import {Toast} from 'antd-mobile';
+import {useHistory} from 'react-router-dom';
 
 const Wrapper = styled.div`
   display: flex;
@@ -12,7 +16,12 @@ const Wrapper = styled.div`
 
 function Money() {
   let refDiv = useRef<HTMLDivElement>(null);
-  const [category,setCategory] = useState<CategoryType>('-')
+  const [tagsData, setTagsData] = useState<Pick<RecordItem, 'tagIds' | 'category'>>({tagIds: [], category: '-'});
+  const [numberPadData, setNumPadData] = useState<Pick<RecordItem, 'note' | 'amount'>>({note: '', amount: ''});
+  const selectedIdsLength = useRef(0);
+  const {addRecord, records} = useRecords();
+  const count = useRef(0);
+  const history = useHistory();
   useEffect(() => {
     window.addEventListener('contextmenu', (e) => {
       e.preventDefault();
@@ -21,11 +30,32 @@ function Money() {
       refDiv.current.style.height = document.documentElement.clientHeight + 'px';
     }
   }, []);
+  useEffect(() => {
+    selectedIdsLength.current = tagsData.tagIds.length;
+  }, [tagsData]);
+  useEffect(() => {
+    if (count.current > 0) {
+      if (selectedIdsLength.current === 0) {
+        Toast.show('请选择至少一个标签！！！');
+      } else {
+        addRecord({...numberPadData, ...tagsData, createdAt: dayjs().toISOString()});
+      }
+    }
+    count.current += 1;
+  }, [numberPadData]);
+  useEffect(() => {
+    if (count.current > 1) {
+      history.push('/statistics');
+      Toast.show('添加成功');
+    }
+  }, [records]);
   return (
     <Wrapper ref={refDiv}>
-      <Category onChange={(value) => setCategory(value)}/>
-      <Tags category={category}/>
-      <NumberPad/>
+      <Category onChange={(value) => setTagsData({...tagsData, category: value})}/>
+      <Tags category={tagsData.category} onChange={(value) => setTagsData({...tagsData, tagIds: value})}/>
+      <NumberPad onChange={(value) => {
+        setNumPadData({...numberPadData, ...value});
+      }}/>
     </Wrapper>
   );
 }

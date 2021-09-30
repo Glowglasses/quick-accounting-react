@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Icon from 'components/Icon';
 import {HandleTag} from './HandleTag';
 import {Tag, useTags} from 'hooks/useTags';
+import {CategoryType} from '../../components/Category';
 
 const Wrapper = styled.div`
   width: 89%;
@@ -42,27 +43,33 @@ const Wrapper = styled.div`
     }
   }
 `;
-const Tags: React.FC<{ category: ('+' | '-') }> = (props) => {
+type Props = {
+  category: CategoryType
+  onChange: (selectIds: number[]) => void
+}
+const Tags: React.FC<Props> = (props) => {
   const {tags, setTags} = useTags();
-  const [selectedList, setSelectedList] = useState<number[]>([]);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [handleTagVisible, setHandleTagVisible] = useState(false);
   const handleType = useRef('add');
   let timer = -1;
   let isEdit = false;
   const editTagValue = useRef<Tag>({name: '', id: -1, type: '-'});
   const triggerTag = (id: number) => {
-    const index = selectedList.findIndex(item => id === item);
+    const index = selectedIds.findIndex(item => id === item);
+    let newSelectedIds = [...selectedIds];
     if (index > -1) {
-      const newSelectedList = [...selectedList];
-      newSelectedList.splice(index, 1);
-      setSelectedList(newSelectedList);
+      newSelectedIds.splice(index, 1);
+      setSelectedIds(newSelectedIds);
     } else {
-      setSelectedList([...selectedList, id]);
+      newSelectedIds = [...selectedIds, id];
+      setSelectedIds(newSelectedIds);
     }
+    props.onChange(newSelectedIds);
   };
 
   useEffect(() => {
-    setSelectedList([]);
+    setSelectedIds([]);
   }, [props.category]);
 
   const editTag = (value: Tag) => {
@@ -93,7 +100,7 @@ const Tags: React.FC<{ category: ('+' | '-') }> = (props) => {
                                                                    });
                                                                  }}
                                                                  onTouchEnd={endTouch}
-                                                                 className={selectedList.find(id => id === item.id) !== undefined ? 'selected' : ''}>
+                                                                 className={selectedIds.find(id => id === item.id) !== undefined ? 'selected' : ''}>
             {item.name}</li> : null)}
           <li className="add" onClick={() => {
             setHandleTagVisible(true);

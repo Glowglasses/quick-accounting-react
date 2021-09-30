@@ -1,21 +1,25 @@
-import React, {useRef, useState} from 'react';
+import React, {ChangeEvent, useRef, useState} from 'react';
 import {NumberPadWrapper} from 'components/NumberPadWrapper';
 import {updateAccount} from 'lib/updateAccount';
 import {DatePicker} from 'antd-mobile';
 import dayjs from 'dayjs';
 
-const NumberPad: React.FC = () => {
-  const [accountValue, setAccountValue] = useState('0');
+type Props = {
+  onChange: ({note, amount}: { note: string, amount: string }) => void,
+}
+const NumberPad: React.FC<Props> = (props) => {
+  const [amount, setAmount] = useState('0');
   const [dateVisible, setDateVisible] = useState(false);
   const [isComputer, setIsComputer] = useState(false);
+  const [note, setNote] = useState('');
   const [today, setToday] = useState(new Date());
   const maxDate = dayjs().endOf('year').toDate();
   const minDate = dayjs().startOf('year').toDate();
   const refDate = useRef<HTMLButtonElement>(null);
   const clickNumberPad = (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
     (e.target as HTMLButtonElement).setAttribute('style', 'animation: clickAnimation 0.1s;');
-    const newValue = updateAccount({dom: (e.target as HTMLButtonElement), accountValue});
-    setAccountValue(newValue);
+    const newValue = updateAccount({dom: (e.target as HTMLButtonElement), accountValue: amount});
+    setAmount(newValue);
     if (RegExp(/[+\-×÷]/).test(newValue.slice(1, -1))) {
       setIsComputer(true);
     } else {
@@ -23,19 +27,19 @@ const NumberPad: React.FC = () => {
     }
     setTimeout(() => {
       (e.target as HTMLButtonElement).removeAttribute('style');
-    },100)
+    }, 100);
   };
 
   const computerAccount = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    const newValue = updateAccount({isComputer: true, accountValue});
-    setAccountValue(newValue);
+    const newValue = updateAccount({isComputer: true, accountValue: amount});
+    setAmount(newValue);
     setIsComputer(false);
   };
 
   const commit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    console.log('提交');
+      props.onChange({note: note, amount: amount});
   };
 
   const openDate = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -43,6 +47,9 @@ const NumberPad: React.FC = () => {
     e.stopPropagation();
   };
 
+  const inputNote = (e: ChangeEvent) => {
+    setNote((e.target as HTMLInputElement).value);
+  };
   const selectedDate = (value: Date) => {
     // 日历每次点击都为当天
     setToday(new Date());
@@ -58,10 +65,10 @@ const NumberPad: React.FC = () => {
     <NumberPadWrapper>
       <div className="inputs">
         <label className="note">
-          <span>备注：</span><input type="text"/>
+          <span>备注：</span><input type="text" value={note} onChange={inputNote}/>
         </label>
         <label className="amount">
-          <span>金额：</span><input type="text" onFocus={(e) => {e.target.blur();}} value={accountValue}
+          <span>金额：</span><input type="text" onFocus={(e) => {e.target.blur();}} value={amount}
                                  onChange={() => {}}/>
         </label>
       </div>
