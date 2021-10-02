@@ -21,6 +21,9 @@ const useTags = () => {
     setTags(localTags);
   }, []);
 
+  const findNameByIds = (ids: number[]) => {
+
+  }
   useUpdate(() => {
     window.localStorage.setItem('tags', JSON.stringify(tags));
   }, tags);
@@ -37,7 +40,7 @@ const useTags = () => {
     setTags(tags.filter(item => item.id !== id));
   };
 
-  return {addTag, updateTag, tags, setTags, removeTag};
+  return {addTag, updateTag, tags, setTags, removeTag,findNameByIds};
 };
 
 export {useTags};
