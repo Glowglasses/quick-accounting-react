@@ -4,7 +4,7 @@ import {useUpdate} from './useUpdate';
 import {CategoryType} from 'components/Category';
 
 export type Tags = Tag[]
-export type Tag = { id: number, name: string , type: string}
+export type Tag = { id: number, name: string, type: string }
 const useTags = () => {
   const [tags, setTags] = useState<Tags>([]);
   useEffect(() => {
@@ -15,32 +15,39 @@ const useTags = () => {
         {id: createId(), name: '食', type: '-'},
         {id: createId(), name: '住', type: '-'},
         {id: createId(), name: '行', type: '-'},
-        {id: createId(),name: '工资', type: '+'}
+        {id: createId(), name: '工资', type: '+'}
       ];
     }
     setTags(localTags);
   }, []);
 
   const findNameByIds = (ids: number[]) => {
-
-  }
+    let tagsName: string[] = [];
+    ids.forEach(item => {
+      const tag = tags.find(item1 => item === item1.id);
+      if (tag) {
+        tagsName.push(tag.name);
+      }
+    });
+    return tagsName;
+  };
   useUpdate(() => {
     window.localStorage.setItem('tags', JSON.stringify(tags));
   }, tags);
 
-  const addTag = (name: string,categoryType: CategoryType) => {
+  const addTag = (name: string, categoryType: CategoryType) => {
     setTags([...tags, {name: name, id: createId(), type: categoryType}]);
   };
 
   const updateTag = (tag: Tag) => {
-    setTags(tags.map(item => item.id === tag.id ? {id: tag.id, name: tag.name,type: tag.type} : item));
+    setTags(tags.map(item => item.id === tag.id ? {id: tag.id, name: tag.name, type: tag.type} : item));
   };
 
   const removeTag = (id: number) => {
     setTags(tags.filter(item => item.id !== id));
   };
 
-  return {addTag, updateTag, tags, setTags, removeTag,findNameByIds};
+  return {addTag, updateTag, tags, setTags, removeTag, findNameByIds};
 };
 
 export {useTags};
