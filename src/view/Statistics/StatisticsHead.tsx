@@ -10,6 +10,7 @@ const Wrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   background-color: #d0d0d0;
+
   > .date {
     font-size: 18px;
     display: flex;
@@ -82,12 +83,14 @@ const StatisticsHead: React.FC<Props> = (props) => {
     if (currentMonth) {
       props.onChange(currentMonth);
     }
-  }, [props,currentMonth]);
+  }, [props, currentMonth]);
   return (
     <>
       <Wrapper>
-        <div className="date" onClick={selectDate}>{currentMonth}<span className="icon"><Icon
-          name="down"/></span></div>
+        <div className="date" onClick={selectDate}>{currentMonth}
+          {dateVisible ? <span className="icon"><Icon name="up"/></span> :
+            <span className="icon"><Icon name="down"/></span>}
+        </div>
         <ul className="amount">
           <li>0</li>
           <li>{dayjs().get('month')}月结余</li>
