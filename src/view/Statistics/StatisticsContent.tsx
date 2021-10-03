@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import {descending, recordsByMonth} from '../../lib/formatRecords';
 import React from 'react';
 import {useTags} from '../../hooks/useTags';
+import generateRandomId from '../../lib/generateRandomId';
 
 const Wrapper = styled.div`
   overflow: auto;
@@ -25,19 +26,25 @@ type Props = {
   currentMonth: string
 }
 const StatisticsContent: React.FC<Props> = (props) => {
-  const currentMonthRecord = descending(recordsByMonth()[props.currentMonth] || {});
-  const {findNameByIds} = useTags();
-  return (
-    <Wrapper>
-      <ul>
-        {currentMonthRecord.map(item =>
-          <>
-            <li className="month">{item[0]}</li>
-            {item[1].map((record) => <li className="detail">{findNameByIds(record.tagIds).join(',')}</li>)}
-          </>
-        )}
-      </ul>
-    </Wrapper>
-  );
-};
-export {StatisticsContent};
+    const currentMonthRecord = descending(recordsByMonth()[props.currentMonth] || {});
+    const {findNameByIds} = useTags();
+    return (
+      <Wrapper>
+        <ul>
+          {currentMonthRecord.map(item =>
+            <React.Fragment key={generateRandomId(16)}>
+              <li className="month" key={generateRandomId(16)}>{item[0]}</li>
+              {item[1].map((record, index1) => <li className="detail"
+                                                   key={generateRandomId(16)}>{findNameByIds(record.tagIds).join('，')}</li>)}
+            </React.Fragment>
+          )}
+        </ul>
+      </Wrapper>
+    );
+  }
+;
+export
+{
+  StatisticsContent
+}
+  ;
