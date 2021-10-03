@@ -101,4 +101,4 @@ const updateAccount = ({ isComputer, dom, accountValue }: { isComputer?: boolean
   return outputValue;
 };
 
-export {updateAccount};
+export {updateAccount, formatDecimal};

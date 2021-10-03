@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useRef, useState} from 'react';
 import {NumberPadWrapper} from 'components/NumberPadWrapper';
-import {updateAccount} from 'lib/updateAccount';
+import {updateAccount, formatDecimal} from 'lib/updateAccount';
 import {DatePicker} from 'antd-mobile';
 import dayjs from 'dayjs';
 
@@ -41,7 +41,13 @@ const NumberPad: React.FC<Props> = (props) => {
 
   const commit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    props.onChange({note: note, amount: amount, createdAt: dayjs(selectDate).toISOString()});
+    let format = '';
+    if ('+-×÷'.indexOf(amount.charAt(amount.length - 1)) >= 0) {
+      format = formatDecimal(parseFloat(amount.substring(0, amount.length - 1))) + '';
+    } else {
+      format = formatDecimal(parseFloat(amount)) + '';
+    }
+    props.onChange({note: note, amount: format, createdAt: dayjs(selectDate).toISOString()});
   };
 
   const openDate = (e: React.MouseEvent<HTMLButtonElement>) => {
