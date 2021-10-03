@@ -3,6 +3,9 @@ import dayjs from 'dayjs';
 import Icon from '../../components/Icon';
 import React, {useEffect, useState} from 'react';
 import {DatePicker} from 'antd-mobile';
+import {Records} from '../../hooks/useRecords';
+import {descending, recordsByMonth} from '../../lib/formatRecords';
+import {computerPayoutOrIncomeOrBalance} from '../../lib/ComputerAmount';
 
 const Wrapper = styled.div`
   display: flex;
@@ -69,21 +72,23 @@ const Wrapper = styled.div`
 `;
 
 type Props = {
-  onChange: (value: string) => void;
+  onChange: (value: [string, Records][]) => void;
 }
 const StatisticsHead: React.FC<Props> = (props) => {
   const [dateVisible, setDateVisible] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(dayjs().format('YYYY年MM月'));
   const [defaultDate, setDefaultDate] = useState(new Date());
+  const [currentMonthRecords, setCurrentMonthRecords] = useState<[string, Records][]>([]);
   const selectDate = () => {
     setDefaultDate(new Date());
     setDateVisible(true);
   };
   useEffect(() => {
-    if (currentMonth) {
-      props.onChange(currentMonth);
-    }
-  }, [props, currentMonth]);
+    setCurrentMonthRecords(descending(recordsByMonth()[currentMonth]));
+  }, [currentMonth]);
+  useEffect(() => {
+    props.onChange(currentMonthRecords);
+  }, [currentMonthRecords]);
   return (
     <>
       <Wrapper>
@@ -92,16 +97,16 @@ const StatisticsHead: React.FC<Props> = (props) => {
             <span className="icon"><Icon name="down"/></span>}
         </div>
         <ul className="amount">
-          <li>0</li>
+          <li>{computerPayoutOrIncomeOrBalance(currentMonthRecords, 'balance')}</li>
           <li>{dayjs().get('month')}月结余</li>
         </ul>
         <div className="amountByType">
           <ul>
-            <li>0</li>
+            <li>{computerPayoutOrIncomeOrBalance(currentMonthRecords, 'income')}</li>
             <li>{dayjs().get('month')}月收入</li>
           </ul>
           <ul>
-            <li>0</li>
+            <li>{computerPayoutOrIncomeOrBalance(currentMonthRecords, 'payout')}</li>
             <li>{dayjs().get('month')}月支出</li>
           </ul>
         </div>

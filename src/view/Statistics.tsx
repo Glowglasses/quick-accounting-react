@@ -2,15 +2,15 @@ import React, {useState} from 'react';
 import Layout from '../components/Layout';
 import {StatisticsHead} from './Statistics/StatisticsHead';
 import {StatisticsContent} from './Statistics/StatisticsContent';
-import dayjs from 'dayjs';
+import {Records} from '../hooks/useRecords';
 
 
 const Statistics = () => {
-  const [currentMonth, setCurrentMonth] = useState<string>(dayjs().format('YYYY年MM月'));
+  const [currentMonthRecords,setCurrentMonthRecords] = useState<[string,Records][]>([])
   return (
     <Layout>
-      <StatisticsHead onChange={(value) => {setCurrentMonth(value);}}/>
-      <StatisticsContent currentMonth={currentMonth}/>
+      <StatisticsHead onChange={(value) => {setCurrentMonthRecords(value);}}/>
+      <StatisticsContent currentMonthRecord={currentMonthRecords}/>
     </Layout>
   );
 };

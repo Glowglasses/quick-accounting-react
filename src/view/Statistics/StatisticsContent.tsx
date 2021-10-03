@@ -1,44 +1,65 @@
 import styled from 'styled-components';
-import {descending, recordsByMonth} from '../../lib/formatRecords';
 import React from 'react';
 import {useTags} from '../../hooks/useTags';
 import generateRandomId from '../../lib/generateRandomId';
+import {Records} from '../../hooks/useRecords';
 
 const Wrapper = styled.div`
   overflow: auto;
+  width: 100%;
 
-  ul > {
-    .month {
-      background-color: #efefef;
-      line-height: 28px;
-      height: 28px;
+  .month {
+    background-color: #efefef;
+    line-height: 28px;
+    height: 28px;
+  }
+
+  .detail {
+    height: 50px;
+    line-height: 50px;
+    border-bottom: 1px solid #f5f5f5;
+    display: flex;
+    position: relative;
+    > section:nth-child(1) {
+      width: 50%;
+      float: left;
+    }
+    > section:nth-child(2) {
+      width: 50%; 
+      float: right;
+      text-align: right;
+      margin-right: 5px;
     }
 
-    .detail {
-      height: 38px;
-      line-height: 38px;
-      border-bottom: 1px solid #f5f5f5;
+    > section:nth-child(3) {
+      font-size: 12px;
+      position: absolute;
+      bottom: -20px;
+      left: 0;
     }
   }
 `;
 
 type Props = {
-  currentMonth: string
+  currentMonthRecord: [string, Records][]
 }
 const StatisticsContent: React.FC<Props> = (props) => {
-    const currentMonthRecord = descending(recordsByMonth()[props.currentMonth] || {});
     const {findNameByIds} = useTags();
     return (
       <Wrapper>
-        <ul>
-          {currentMonthRecord.map(item =>
-            <React.Fragment key={generateRandomId(16)}>
-              <li className="month" key={generateRandomId(16)}>{item[0]}</li>
-              {item[1].map((record, index1) => <li className="detail"
-                                                   key={generateRandomId(16)}>{findNameByIds(record.tagIds).join('，')}</li>)}
-            </React.Fragment>
-          )}
-        </ul>
+        {props.currentMonthRecord.length > 0 ? props.currentMonthRecord.map(item =>
+          <React.Fragment key={generateRandomId(16)}>
+            <div className="month" key={generateRandomId(16)}>{item[0]}</div>
+            {item[1].map((record, index1) => <React.Fragment key={generateRandomId(16)}>
+              <div className="detail" key={generateRandomId(16)}>
+                <section key={generateRandomId(16)}>{findNameByIds(record.tagIds).join('，')}</section>
+                <section
+                  key={generateRandomId(16)}>{record.category === '-' ? '-' + record.amount : '+' + record.amount}</section>
+                <section key={generateRandomId(16)}>{record.note}</section>
+              </div>
+            </React.Fragment>)}
+          </React.Fragment>
+        ) : null}
       </Wrapper>
     );
   }
