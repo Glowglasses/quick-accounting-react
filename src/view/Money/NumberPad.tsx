@@ -5,14 +5,16 @@ import {DatePicker} from 'antd-mobile';
 import dayjs from 'dayjs';
 
 type Props = {
-  onChange: ({note, amount}: { note: string, amount: string }) => void,
+  onChange: ({note, amount}: { note: string, amount: string, createdAt: string }) => void,
 }
 const NumberPad: React.FC<Props> = (props) => {
+  console.log(dayjs().toISOString());
   const [amount, setAmount] = useState('0');
   const [dateVisible, setDateVisible] = useState(false);
   const [isComputer, setIsComputer] = useState(false);
   const [note, setNote] = useState('');
   const [today, setToday] = useState(new Date());
+  const [selectDate, setSelectDate] = useState(dayjs().toISOString());
   const maxDate = dayjs().endOf('year').toDate();
   const minDate = dayjs().startOf('year').toDate();
   const refDate = useRef<HTMLButtonElement>(null);
@@ -39,7 +41,7 @@ const NumberPad: React.FC<Props> = (props) => {
 
   const commit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-      props.onChange({note: note, amount: amount});
+    props.onChange({note: note, amount: amount, createdAt: dayjs(selectDate).toISOString()});
   };
 
   const openDate = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -59,6 +61,7 @@ const NumberPad: React.FC<Props> = (props) => {
       } else {
         refDate.current.textContent = dayjs(value).format('YYYY-M-D');
       }
+      setSelectDate(dayjs(value).toISOString());
     }
   };
   return (

@@ -4,9 +4,9 @@ import {Tags} from './Money/Tags';
 import {NumberPad} from './Money/NumberPad';
 import styled from 'styled-components';
 import {RecordItem, useRecords} from '../hooks/useRecords';
-import dayjs from 'dayjs';
 import {Toast} from 'antd-mobile';
 import {useHistory} from 'react-router-dom';
+import dayjs from 'dayjs';
 
 const Wrapper = styled.div`
   display: flex;
@@ -17,7 +17,11 @@ const Wrapper = styled.div`
 function Money() {
   let refDiv = useRef<HTMLDivElement>(null);
   const [tagsData, setTagsData] = useState<Pick<RecordItem, 'tagIds' | 'category'>>({tagIds: [], category: '-'});
-  const [numberPadData, setNumPadData] = useState<Pick<RecordItem, 'note' | 'amount'>>({note: '', amount: ''});
+  const [numberPadData, setNumPadData] = useState<Pick<RecordItem, 'note' | 'amount' | 'createdAt'>>({
+    note: '',
+    amount: '',
+    createdAt: dayjs().toISOString()
+  });
   const selectedIdsLength = useRef(0);
   const {addRecord, records} = useRecords();
   const count = useRef(0);
@@ -38,7 +42,7 @@ function Money() {
       if (selectedIdsLength.current === 0) {
         Toast.show('请选择至少一个标签！！！');
       } else {
-        addRecord({...numberPadData, ...tagsData, createdAt: dayjs().toISOString()});
+        addRecord({...numberPadData, ...tagsData});
       }
     }
     count.current += 1;
