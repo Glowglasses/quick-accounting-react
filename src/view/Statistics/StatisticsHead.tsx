@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 import Icon from '../../components/Icon';
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {DatePicker} from 'antd-mobile';
 import {Records} from '../../hooks/useRecords';
 import {computerPayoutOrIncomeOrBalance} from '../../lib/ComputerAmount';
@@ -78,6 +78,7 @@ const StatisticsHead: React.FC<Props> = (props) => {
   const [dateVisible, setDateVisible] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(dayjs().format('YYYY年MM月'));
   const [defaultDate, setDefaultDate] = useState(new Date());
+  const refCurrentMonth = useRef(dayjs().get('month') + 1)
   const selectDate = () => {
     setDefaultDate(new Date());
     setDateVisible(true);
@@ -92,16 +93,16 @@ const StatisticsHead: React.FC<Props> = (props) => {
         </div>
         <ul className="amount">
           <li>{computerPayoutOrIncomeOrBalance(props.currentMonthRecords, 'balance')}</li>
-          <li>{dayjs().get('month')}月结余</li>
+          <li>{refCurrentMonth.current}月结余</li>
         </ul>
         <div className="amountByType">
           <ul>
             <li>{computerPayoutOrIncomeOrBalance(props.currentMonthRecords, 'income')}</li>
-            <li>{dayjs().get('month')}月收入</li>
+            <li>{refCurrentMonth.current}月收入</li>
           </ul>
           <ul>
             <li>{computerPayoutOrIncomeOrBalance(props.currentMonthRecords, 'payout')}</li>
-            <li>{dayjs().get('month')}月支出</li>
+            <li>{refCurrentMonth.current}月支出</li>
           </ul>
         </div>
         <DatePicker
@@ -116,6 +117,7 @@ const StatisticsHead: React.FC<Props> = (props) => {
           onConfirm={value => {
             setCurrentMonth(dayjs(value).format('YYYY年MM月'));
             props.onChange(dayjs(value).format('YYYY年MM月'));
+            refCurrentMonth.current = dayjs(value).get('month') + 1
           }}
         />
       </Wrapper>
