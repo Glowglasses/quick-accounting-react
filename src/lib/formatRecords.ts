@@ -1,8 +1,7 @@
 import {Records} from 'hooks/useRecords';
 import dayjs from 'dayjs';
 
-const recordsByMonth = () => {
-  const records: Records = JSON.parse(window.localStorage.getItem('records') || '[]');
+const recordsByMonth = (records: Records) => {
   const hash: { [K: string]: { [K: string]: Records } } = {};
   records.forEach((item) => {
     const monthKey = dayjs(item.createdAt).format('YYYY年MM月');

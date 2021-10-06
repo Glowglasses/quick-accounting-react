@@ -1,9 +1,10 @@
 import styled from 'styled-components';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useTags} from '../../hooks/useTags';
 import generateRandomId from '../../lib/generateRandomId';
-import {RecordItem, Records} from '../../hooks/useRecords';
+import {RecordItem, Records, useRecords} from '../../hooks/useRecords';
 import {useHistory} from 'react-router-dom';
+import {Dialog, Toast} from 'antd-mobile';
 
 const Wrapper = styled.div`
   overflow: auto;
@@ -21,12 +22,15 @@ const Wrapper = styled.div`
     border-bottom: 1px solid #f5f5f5;
     display: flex;
     position: relative;
+    user-select: none;
+
     > section:nth-child(1) {
       width: 50%;
       float: left;
     }
+
     > section:nth-child(2) {
-      width: 50%; 
+      width: 50%;
       float: right;
       text-align: right;
       margin-right: 5px;
@@ -42,25 +46,69 @@ const Wrapper = styled.div`
 `;
 
 type Props = {
-  currentMonthRecord: [string, Records][]
+  currentMonthRecord: [string, Records][],
+  onDelete: (value: string) => void
 }
 const StatisticsContent: React.FC<Props> = (props) => {
     const {findNameByIds} = useTags();
     const history = useHistory();
+    let timer = -1;
+    let isEdit = false;
     const edit = (record: RecordItem) => {
-      window.localStorage.setItem('isEdit','true');
-      window.localStorage.setItem("currentRecord", JSON.stringify(record))
+      window.localStorage.setItem('isEdit', 'true');
+      window.localStorage.setItem('currentRecord', JSON.stringify(record));
       setTimeout(() => {
-        history.push('/money')
-      })
-    }
+        history.push('/money');
+      });
+    };
+
+    const longPress = (createAt: string) => {
+      clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        isEdit = true;
+        window.localStorage.removeItem('isEdit');
+        window.localStorage.removeItem('currentRecord');
+        Dialog.show({
+          content: '是否删除？',
+          closeOnAction: true,
+          actions: [
+            [
+              {
+                key: 'cancel',
+                text: '取消',
+              },
+              {
+                key: 'delete',
+                text: '删除',
+                bold: true,
+                danger: true,
+              },
+            ],
+          ],
+          onAction: (action) => {
+            if (action.key === 'delete') {
+              props.onDelete(createAt);
+            }
+          }
+        });
+      }, 500);
+    };
+
+    const touchEnd = () => {
+      if (!isEdit) {
+        clearTimeout(timer);
+      }
+    };
+
     return (
       <Wrapper>
         {props.currentMonthRecord.length > 0 ? props.currentMonthRecord.map(item =>
           <React.Fragment key={generateRandomId(16)}>
             <div className="month" key={generateRandomId(16)}>{item[0]}</div>
             {item[1].map((record, index1) => <React.Fragment key={generateRandomId(16)}>
-              <div className="detail" key={generateRandomId(16)} onClick={() => {edit(record)}}>
+              <div className="detail" key={generateRandomId(16)} onClick={() => {edit(record);}}
+                   onTouchStart={() => {longPress(record.createdAt);}}
+                   onTouchEnd={touchEnd}>
                 <section key={generateRandomId(16)}>{findNameByIds(record.tagIds).join('，')}</section>
                 <section
                   key={generateRandomId(16)}>{record.category === '-' ? '-' + record.amount : '+' + record.amount}</section>
@@ -73,8 +121,4 @@ const StatisticsContent: React.FC<Props> = (props) => {
     );
   }
 ;
-export
-{
-  StatisticsContent
-}
-  ;
+export {StatisticsContent} ;

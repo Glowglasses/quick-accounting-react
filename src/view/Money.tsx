@@ -23,13 +23,10 @@ function Money() {
     createdAt: dayjs().toISOString()
   });
   const selectedIdsLength = useRef(0);
-  const {addRecord, records} = useRecords();
+  const {addRecord, records, updateRecord} = useRecords();
   const count = useRef(0);
   const history = useHistory();
   useEffect(() => {
-    window.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-    });
     if (refDiv.current) {
       refDiv.current.style.height = document.documentElement.clientHeight + 'px';
     }
@@ -41,16 +38,28 @@ function Money() {
     if (count.current > 0) {
       if (selectedIdsLength.current === 0) {
         Toast.show('请选择至少一个标签！！！');
+        return;
+      }
+      if (JSON.parse(window.localStorage.getItem('isEdit') || 'false')) {
+        updateRecord({...numberPadData, ...tagsData});
+        selectedIdsLength.current = 0;
       } else {
         addRecord({...numberPadData, ...tagsData});
       }
     }
     count.current += 1;
   }, [numberPadData]);
+
   useEffect(() => {
     if (count.current > 1) {
+      if (JSON.parse(window.localStorage.getItem('isEdit') || 'false')) {
+        Toast.show('修改成功');
+        window.localStorage.removeItem('isEdit');
+        window.localStorage.removeItem('currentRecord');
+      } else {
+        Toast.show('添加成功');
+      }
       history.push('/statistics');
-      Toast.show('添加成功');
     }
   }, [records]);
   return (

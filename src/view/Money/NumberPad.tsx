@@ -9,7 +9,6 @@ type Props = {
   onChange: ({note, amount}: { note: string, amount: string, createdAt: string }) => void,
 }
 const NumberPad: React.FC<Props> = (props) => {
-  console.log(dayjs().toISOString());
   const [amount, setAmount] = useState('0');
   const [dateVisible, setDateVisible] = useState(false);
   const [isComputer, setIsComputer] = useState(false);
@@ -64,12 +63,13 @@ const NumberPad: React.FC<Props> = (props) => {
     } else {
       format = formatDecimal(parseFloat(amount)) + '';
     }
-    props.onChange({note: note, amount: format, createdAt: dayjs(selectDate).toISOString()});
+    if (isEdit) {
+      if (currentRecord) props.onChange({note: note, amount: format, createdAt: currentRecord.createdAt});
+    } else {
+      props.onChange({note: note, amount: format, createdAt: dayjs(selectDate).toISOString()});
+    }
   };
 
-  const update = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-  };
   const openDate = (e: React.MouseEvent<HTMLButtonElement>) => {
     setDateVisible(true);
     e.stopPropagation();
@@ -117,7 +117,7 @@ const NumberPad: React.FC<Props> = (props) => {
         <button>9</button>
         <button>×</button>
         {isEdit ? <>{isComputer ? <button className="ok" onClick={computerAccount}>=</button> :
-          <button className="ok" onClick={update}>修改</button>}</> :
+          <button className="ok" onClick={commit}>修改</button>}</> :
           <>{isComputer ? <button className="ok" onClick={computerAccount}>=</button> :
             <button className="ok" onClick={commit}>完成</button>}</>}
         <button>0</button>

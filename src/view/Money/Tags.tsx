@@ -80,6 +80,7 @@ const Tags: React.FC<Props> = (props) => {
       if (currentRecord) {
         refCategory.current = currentRecord.category;
         setSelectedIds(currentRecord.tagIds);
+        props.onChange(currentRecord.tagIds);
       }
     }
   }, [currentRecord]);
@@ -87,6 +88,7 @@ const Tags: React.FC<Props> = (props) => {
   useEffect(() => {
     setSelectedIds([]);
   }, [props.category]);
+
 
   const editTag = (value: Tag) => {
     clearTimeout(timer);

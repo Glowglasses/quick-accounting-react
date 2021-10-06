@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   HashRouter as Router,
   Switch,
@@ -10,6 +10,11 @@ import Chart from './view/Chart';
 import Statistics from './view/Statistics';
 
 function App() {
+  useEffect(() => {
+    window.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+    });
+  },[])
   return (
     <Router>
       <Switch>
