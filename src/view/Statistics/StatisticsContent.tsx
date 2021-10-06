@@ -1,15 +1,15 @@
 import styled from 'styled-components';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {useTags} from '../../hooks/useTags';
 import generateRandomId from '../../lib/generateRandomId';
-import {RecordItem, Records, useRecords} from '../../hooks/useRecords';
+import {RecordItem, Records} from '../../hooks/useRecords';
 import {useHistory} from 'react-router-dom';
-import {Dialog, Toast} from 'antd-mobile';
+import {Dialog} from 'antd-mobile';
 
 const Wrapper = styled.div`
   overflow: auto;
   width: 100%;
-
+  flex-grow: 1;
   .month {
     background-color: #efefef;
     line-height: 28px;
