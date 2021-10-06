@@ -53,7 +53,7 @@ const StatisticsContent: React.FC<Props> = (props) => {
     const {findNameByIds} = useTags();
     const history = useHistory();
     let timer = -1;
-    let isEdit = false;
+    let isDelete = false;
     const edit = (record: RecordItem) => {
       window.localStorage.setItem('isEdit', 'true');
       window.localStorage.setItem('currentRecord', JSON.stringify(record));
@@ -65,7 +65,7 @@ const StatisticsContent: React.FC<Props> = (props) => {
     const longPress = (createAt: string) => {
       clearTimeout(timer);
       timer = window.setTimeout(() => {
-        isEdit = true;
+        isDelete = true;
         window.localStorage.removeItem('isEdit');
         window.localStorage.removeItem('currentRecord');
         Dialog.show({
@@ -88,6 +88,8 @@ const StatisticsContent: React.FC<Props> = (props) => {
           onAction: (action) => {
             if (action.key === 'delete') {
               props.onDelete(createAt);
+            }else {
+              isDelete = false;
             }
           }
         });
@@ -95,7 +97,7 @@ const StatisticsContent: React.FC<Props> = (props) => {
     };
 
     const touchEnd = () => {
-      if (!isEdit) {
+      if (!isDelete) {
         clearTimeout(timer);
       }
     };
