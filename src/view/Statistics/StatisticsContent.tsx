@@ -2,7 +2,8 @@ import styled from 'styled-components';
 import React from 'react';
 import {useTags} from '../../hooks/useTags';
 import generateRandomId from '../../lib/generateRandomId';
-import {Records} from '../../hooks/useRecords';
+import {RecordItem, Records} from '../../hooks/useRecords';
+import {useHistory} from 'react-router-dom';
 
 const Wrapper = styled.div`
   overflow: auto;
@@ -45,13 +46,21 @@ type Props = {
 }
 const StatisticsContent: React.FC<Props> = (props) => {
     const {findNameByIds} = useTags();
+    const history = useHistory();
+    const edit = (record: RecordItem) => {
+      window.localStorage.setItem('isEdit','true');
+      window.localStorage.setItem("currentRecord", JSON.stringify(record))
+      setTimeout(() => {
+        history.push('/money')
+      })
+    }
     return (
       <Wrapper>
         {props.currentMonthRecord.length > 0 ? props.currentMonthRecord.map(item =>
           <React.Fragment key={generateRandomId(16)}>
             <div className="month" key={generateRandomId(16)}>{item[0]}</div>
             {item[1].map((record, index1) => <React.Fragment key={generateRandomId(16)}>
-              <div className="detail" key={generateRandomId(16)}>
+              <div className="detail" key={generateRandomId(16)} onClick={() => {edit(record)}}>
                 <section key={generateRandomId(16)}>{findNameByIds(record.tagIds).join('，')}</section>
                 <section
                   key={generateRandomId(16)}>{record.category === '-' ? '-' + record.amount : '+' + record.amount}</section>

@@ -4,6 +4,7 @@ import Icon from 'components/Icon';
 import {HandleTag} from './HandleTag';
 import {Tag, useTags} from 'hooks/useTags';
 import {CategoryType} from '../../components/Category';
+import {useRecords} from '../../hooks/useRecords';
 
 const Wrapper = styled.div`
   width: 89%;
@@ -52,6 +53,8 @@ const Tags: React.FC<Props> = (props) => {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [handleTagVisible, setHandleTagVisible] = useState(false);
   const handleType = useRef('add');
+  const refCategory = useRef<CategoryType>(props.category);
+  const {currentRecord} = useRecords();
   let timer = -1;
   let isEdit = false;
   const editTagValue = useRef<Tag>({name: '', id: -1, type: '-'});
@@ -67,6 +70,19 @@ const Tags: React.FC<Props> = (props) => {
     }
     props.onChange(newSelectedIds);
   };
+
+  useEffect(() => {
+    refCategory.current = props.category;
+  }, [props]);
+
+  useEffect(() => {
+    if (JSON.parse(window.localStorage.getItem('isEdit') || 'false')) {
+      if (currentRecord) {
+        refCategory.current = currentRecord.category;
+        setSelectedIds(currentRecord.tagIds);
+      }
+    }
+  }, [currentRecord]);
 
   useEffect(() => {
     setSelectedIds([]);
@@ -91,16 +107,16 @@ const Tags: React.FC<Props> = (props) => {
     <Wrapper>
       {!handleTagVisible ? <>
         <ol>
-          {tags.map((item) => item.type === props.category ? <li key={item.id} onClick={() => triggerTag(item.id)}
-                                                                 onTouchStart={() => {
-                                                                   editTag({
-                                                                     id: item.id,
-                                                                     name: item.name,
-                                                                     type: props.category
-                                                                   });
-                                                                 }}
-                                                                 onTouchEnd={endTouch}
-                                                                 className={selectedIds.find(id => id === item.id) !== undefined ? 'selected' : ''}>
+          {tags.map((item) => item.type === refCategory.current ? <li key={item.id} onClick={() => triggerTag(item.id)}
+                                                                      onTouchStart={() => {
+                                                                        editTag({
+                                                                          id: item.id,
+                                                                          name: item.name,
+                                                                          type: props.category
+                                                                        });
+                                                                      }}
+                                                                      onTouchEnd={endTouch}
+                                                                      className={selectedIds.find(id => id === item.id) !== undefined ? 'selected' : ''}>
             {item.name}</li> : null)}
           <li className="add" onClick={() => {
             setHandleTagVisible(true);

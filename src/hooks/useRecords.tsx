@@ -12,7 +12,11 @@ export type RecordItem = {
 export type Records = RecordItem[]
 const useRecords = () => {
   const [records, setRecords] = useState<RecordItem[]>([]);
+  const [currentRecord, setRecord] = useState<RecordItem>()
   useEffect(() => {
+    if (JSON.parse(window.localStorage.getItem('isEdit') || 'false' )){
+     setRecord(JSON.parse(window.localStorage.getItem('currentRecord') || `{tagIds: [],note: '',category: '-',amount: '',createdAt: ''`))
+    }
     setRecords(JSON.parse(window.localStorage.getItem('records') || '[]'));
   }, []);
   useUpdate(() => {
@@ -24,7 +28,7 @@ const useRecords = () => {
     console.log(record);
     setRecords([...records, record]);
   };
-  return {records, addRecord};
+  return {records, addRecord, currentRecord};
 };
 
 export {useRecords};

@@ -1,8 +1,9 @@
-import React, {ChangeEvent, useRef, useState} from 'react';
+import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
 import {NumberPadWrapper} from 'components/NumberPadWrapper';
 import {updateAccount, formatDecimal} from 'lib/updateAccount';
 import {DatePicker} from 'antd-mobile';
 import dayjs from 'dayjs';
+import {useRecords} from '../../hooks/useRecords';
 
 type Props = {
   onChange: ({note, amount}: { note: string, amount: string, createdAt: string }) => void,
@@ -15,6 +16,8 @@ const NumberPad: React.FC<Props> = (props) => {
   const [note, setNote] = useState('');
   const [today, setToday] = useState(new Date());
   const [selectDate, setSelectDate] = useState(dayjs().toISOString());
+  const [isEdit, setIsEdit] = useState(false);
+  const {currentRecord} = useRecords();
   const maxDate = dayjs().endOf('year').toDate();
   const minDate = dayjs().startOf('year').toDate();
   const refDate = useRef<HTMLButtonElement>(null);
@@ -31,6 +34,20 @@ const NumberPad: React.FC<Props> = (props) => {
       (e.target as HTMLButtonElement).removeAttribute('style');
     }, 100);
   };
+
+  useEffect(() => {
+    if (JSON.parse(window.localStorage.getItem('isEdit') || 'false')) {
+      if (currentRecord) {
+        setAmount(currentRecord.amount);
+        setSelectDate(currentRecord.createdAt);
+        setIsEdit(true);
+        setNote(currentRecord.note);
+        if (refDate.current) {
+          refDate.current.textContent = dayjs(currentRecord.createdAt).format('YYYY-M-D');
+        }
+      }
+    }
+  }, [currentRecord]);
 
   const computerAccount = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -50,6 +67,9 @@ const NumberPad: React.FC<Props> = (props) => {
     props.onChange({note: note, amount: format, createdAt: dayjs(selectDate).toISOString()});
   };
 
+  const update = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+  };
   const openDate = (e: React.MouseEvent<HTMLButtonElement>) => {
     setDateVisible(true);
     e.stopPropagation();
@@ -96,8 +116,10 @@ const NumberPad: React.FC<Props> = (props) => {
         <button>8</button>
         <button>9</button>
         <button>×</button>
-        {isComputer ? <button className="ok" onClick={computerAccount}>=</button> :
-          <button className="ok" onClick={commit}>完成</button>}
+        {isEdit ? <>{isComputer ? <button className="ok" onClick={computerAccount}>=</button> :
+          <button className="ok" onClick={update}>修改</button>}</> :
+          <>{isComputer ? <button className="ok" onClick={computerAccount}>=</button> :
+            <button className="ok" onClick={commit}>完成</button>}</>}
         <button>0</button>
         <button>.</button>
         <button onClick={openDate} ref={refDate}>
@@ -105,17 +127,19 @@ const NumberPad: React.FC<Props> = (props) => {
         </button>
         <button>÷</button>
       </div>
-      <DatePicker
-        visible={dateVisible}
-        onClose={() => {
-          setDateVisible(false);
-        }}
-        value={today}
-        max={maxDate}
-        min={minDate}
-        onConfirm={selectedDate}
-        onSelect={selectedDate}
-      />
+      {isEdit ? null :
+        <DatePicker
+          visible={dateVisible}
+          onClose={() => {
+            setDateVisible(false);
+          }}
+          value={today}
+          max={maxDate}
+          min={minDate}
+          onConfirm={selectedDate}
+          onSelect={selectedDate}
+        />
+      }
     </NumberPadWrapper>
   );
 };
