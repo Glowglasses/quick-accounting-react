@@ -35,7 +35,7 @@ export type CategoryType = ('+' | '-')
 type Props = {
   value?: CategoryType
   home?: boolean
-  background?: string,
+  backgroundColor?: string
   onChange: (categoryType: CategoryType) => void
 }
 const Category: React.FC<Props> = (props) => {
@@ -49,29 +49,34 @@ const Category: React.FC<Props> = (props) => {
     setDefaultCategory(c);
     if (defaultCategory) props.onChange(c);
   }
-
+  console.log(props.home)
   useEffect(() => {
     if (JSON.parse(window.localStorage.getItem('isEdit') || 'false')) {
       if (currentRecord) {
-        setDefaultCategory(currentRecord.category)
+        setDefaultCategory(currentRecord.category);
       }
     }
   }, [currentRecord]);
+
+  const goHome = () => {
+    history.push('/statistics');
+    window.localStorage.removeItem('isEdit');
+    window.localStorage.removeItem('currentRecord');
+  };
   return (<>
-    <Wrapper style={{background: props.background}}>
+    <Wrapper style={{background: props.backgroundColor}}>
       {categoryList.map(c =>
         <div key={c} className={defaultCategory === c ? 'selected' : ''} onClick={() => click(c)}>
           {categoryMap[c]}
         </div>
       )}
-      {props.home ? <IconWrapper onClick={() => {history.push('/statistics');}}><Icon name="home"/></IconWrapper> : null}
+      {props.home ? <IconWrapper onClick={goHome}><Icon name="home"/></IconWrapper> : null}
     </Wrapper>
   </>);
 };
 
 Category.defaultProps = {
   value: '-',
-  home: true,
-  background: '#d0d0d0'
+  backgroundColor: '#d0d0d0'
 };
 export {Category};
