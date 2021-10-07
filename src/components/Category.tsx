@@ -49,7 +49,6 @@ const Category: React.FC<Props> = (props) => {
     setDefaultCategory(c);
     if (defaultCategory) props.onChange(c);
   }
-  console.log(props.home)
   useEffect(() => {
     if (JSON.parse(window.localStorage.getItem('isEdit') || 'false')) {
       if (currentRecord) {
