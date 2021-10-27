@@ -110,6 +110,8 @@ const StatisticsContent: React.FC<Props> = (props) => {
             {item[1].map((record, index1) => <React.Fragment key={generateRandomId(16)}>
               <div className="detail" key={generateRandomId(16)} onClick={() => {edit(record);}}
                    onTouchStart={() => {longPress(record.createdAt);}}
+                   onMouseDown={() => {longPress(record.createdAt)}}
+                   onMouseUp={touchEnd}
                    onTouchEnd={touchEnd}>
                 <section key={generateRandomId(16)}>{findNameByIds(record.tagIds).join('，')}</section>
                 <section
