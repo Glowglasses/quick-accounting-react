@@ -110,6 +110,14 @@ const Tags: React.FC<Props> = (props) => {
       {!handleTagVisible ? <>
         <ol>
           {tags.map((item) => item.type === refCategory.current ? <li key={item.id} onClick={() => triggerTag(item.id)}
+                                                                      onMouseDown={() => {
+                                                                        editTag({
+                                                                          id: item.id,
+                                                                          name: item.name,
+                                                                          type: props.category
+                                                                        });
+                                                                      }}
+                                                                      onMouseUp={endTouch}
                                                                       onTouchStart={() => {
                                                                         editTag({
                                                                           id: item.id,

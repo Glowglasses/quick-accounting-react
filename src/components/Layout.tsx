@@ -25,10 +25,12 @@ function Layout(props: Props) {
     }
   }, []);
   return (
-    <Wrapper ref={refDiv}>
-      <main className="main">{props.children}</main>
-      <Nav/>
-    </Wrapper>
+    <div className='container'>
+      <Wrapper ref={refDiv}>
+        <main className="main">{props.children}</main>
+        <Nav/>
+      </Wrapper>
+    </div>
   );
 }
 

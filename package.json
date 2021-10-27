@@ -1,6 +1,7 @@
 {
   "name": "quickaccounting-react",
   "version": "0.1.0",
+  "homepage": "https://Glowglasses.github.io/react-accounting-react-website",
   "private": true,
   "dependencies": {
     "@babel/core": "7.12.3",

@@ -42,11 +42,11 @@ const Main = styled.main`
   margin-top: 100px;
   min-width: 300px;
   min-height: 300px;
+  overflow: auto;
 `;
 
 const MainWrapper = styled.div`
-  width: 100vw;
-  overflow: auto;
+  width: 100%;
 `;
 
 function Chart() {
@@ -68,18 +68,24 @@ function Chart() {
       let array: (string[] | number[])[] = [[], []];
       switch (selectDate) {
         case '周':
-          if (refMain.current) refMain.current.style.width = document.documentElement.clientWidth + 'px';
+          if (document.documentElement.clientWidth < 500) {
+            if (refMain.current) refMain.current.style.width = document.documentElement.clientWidth + 'px';
+          }
+          if (refMain.current) refMain.current.style.width = '100%';
           refChart.current?.resize();
           array = getWeekData(category);
           break;
         case '月':
           if (refMain.current) refMain.current.style.width = document.documentElement.clientWidth * 4.5 + 'px';
-          if (refMainWrapper.current) refMainWrapper.current.scrollLeft = document.documentElement.clientWidth / 2 * (dayjs().get('date') / 7) ;
+          if (refMainWrapper.current) refMainWrapper.current.scrollLeft = document.documentElement.clientWidth * (dayjs().get('date') / 7.5);
           refChart.current?.resize();
           array = getMonthData(category);
           break;
         case '年':
-          if (refMain.current) refMain.current.style.width = document.documentElement.clientWidth + 'px';
+          if (document.documentElement.clientWidth < 500) {
+            if (refMain.current) refMain.current.style.width = document.documentElement.clientWidth + 'px';
+          }
+          if (refMain.current) refMain.current.style.width = '100%';
           refChart.current?.resize();
           array = getYearData(category);
           break;
@@ -133,8 +139,10 @@ function Chart() {
         {dateList.map((date) => <div key={date} className={date === selectDate ? 'select' : ''}
                                      onClick={() => select(date)}>{date}</div>)}
       </Wrapper>
-      <MainWrapper ref={refMainWrapper}>
-        <Main ref={refMain} id="main"/>
+      <MainWrapper className="chart-main-wrapper">
+        <div style={{overflow: 'auto'}} ref={refMainWrapper}>
+          <Main ref={refMain} id="main"/>
+        </div>
       </MainWrapper>
     </Layout>
   );

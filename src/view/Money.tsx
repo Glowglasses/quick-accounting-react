@@ -63,7 +63,7 @@ function Money() {
     }
   }, [records]);
   return (
-    <Wrapper ref={refDiv}>
+    <Wrapper ref={refDiv} className='money-wrapper'>
       <Category onChange={(value) => setTagsData({...tagsData, category: value})} home/>
       <Tags category={tagsData.category} onChange={(value) => setTagsData({...tagsData, tagIds: value})}/>
       <NumberPad onChange={(value) => {
