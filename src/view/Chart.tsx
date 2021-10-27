@@ -59,10 +59,12 @@ function Chart() {
   const select = (date: string) => {
     setSelectDate(date);
   };
+
   useEffect(() => {
     const chartDom = document.getElementById('main');
     if (chartDom) refChart.current = echarts.init(chartDom);
   }, []);
+
   useEffect(() => {
     if (refChart.current) {
       let array: (string[] | number[])[] = [[], []];
@@ -78,7 +80,7 @@ function Chart() {
         case '月':
           if (refMain.current) refMain.current.style.width = document.documentElement.clientWidth * 4.5 + 'px';
           if (refMainWrapper.current) refMainWrapper.current.scrollLeft = document.documentElement.clientWidth * (dayjs().get('date') / 7.5);
-          refChart.current?.resize();
+          refChart.current.resize();
           array = getMonthData(category);
           break;
         case '年':
@@ -86,7 +88,7 @@ function Chart() {
             if (refMain.current) refMain.current.style.width = document.documentElement.clientWidth + 'px';
           }
           if (refMain.current) refMain.current.style.width = '100%';
-          refChart.current?.resize();
+          refChart.current.resize();
           array = getYearData(category);
           break;
       }
@@ -104,7 +106,10 @@ function Chart() {
           show: true,
           triggerOn: 'click',
           position: 'top',
-          formatter: '{c}'
+          formatter: '{c}',
+          renderMode: 'richText',
+          borderColor: 'rgba(255,255,255,0.5)',
+          confine: true
         },
         xAxis: {
           type: 'category',
@@ -121,16 +126,21 @@ function Chart() {
         },
         series: [{
           symbol: 'circle',
-          symbolSize: 11,
+          symbolSize: 10,
           type: 'line',
           itemStyle: {
             borderWidth: 1, color: '#666', borderColor: '#666'
           },
           data: data,
-        }]
+          lineStyle:{
+            width: 2
+          },
+          selectedMode: false
+        }],
       };
       refChart.current.setOption(option);
     }
+
   }, [selectDate, category]);
   return (
     <Layout>
@@ -140,7 +150,7 @@ function Chart() {
                                      onClick={() => select(date)}>{date}</div>)}
       </Wrapper>
       <MainWrapper className="chart-main-wrapper">
-        <div style={{overflow: 'auto'}} ref={refMainWrapper}>
+        <div style={{overflow: 'auto'}} className='chart-wrapper' ref={refMainWrapper}>
           <Main ref={refMain} id="main"/>
         </div>
       </MainWrapper>
